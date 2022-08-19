@@ -15,7 +15,8 @@ export default function Home() {
         </h1>
 
         <p className="description">
-          Browse your world at <Link href="the-world">The World!</Link> 
+          Browse your world at <Link href="the-world">The World,</Link> or 
+          learn more about this <Link href="about">App.</Link> 
         </p>
 
         <div className="grid">
