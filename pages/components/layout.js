@@ -32,7 +32,7 @@ export default function Layout({ children, home }) {
                     </Button>
                 </div>
             )}
-            <Container className="footer">
+            <Container>
                 <ProTip />
                 <Copyright />
             </Container>
