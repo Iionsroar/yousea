@@ -1,6 +1,15 @@
-# Next.js example
+# Yousea
 
-## How to use
+## Setup
+
+Install it and run:
+
+```sh
+npm install
+npm run dev
+```
+
+## How to use Next.js example
 
 Download the example [or clone the repo](https://github.com/mui/material-ui):
 
@@ -17,6 +26,7 @@ Install it and run:
 npm install
 npm run dev
 ```
+
 
 or:
 

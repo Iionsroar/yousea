@@ -31,6 +31,11 @@ export default function Index() {
   )
 
   // TODO: SEND post request IF value IS VALID
+  const handleEnter = (event) => {
+    if (event.key == "Enter") {
+      handleSubmit(event);
+    }
+  }
   const handleSubmit = (event) => {
     const val = event.target.value;
     setUrl(val);
@@ -64,9 +69,10 @@ export default function Index() {
               </InputAdornment>
             )
           }}
-          error={ !validUrl.test(url) }
-          helperText={!validUrl.test(url) ? "URL is not correct" : ""}
+          error={ !validUrl.test(url) && Boolean(url)}
+          helperText={!validUrl.test(url) && Boolean(url) ? "URL is not correct" : ""}
           onBlur={handleSubmit}
+          onKeyPress={handleEnter}
           variant="standard"
           size="medium" 
           type="url"
