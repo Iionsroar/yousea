@@ -10,6 +10,9 @@ import Layout, { siteTitle } from './components/layout';
 import Link from '../src/Link';
 
 export default function Index() {
+  const [url, setUrl] = React.useState('http://url.com');
+  const validUrl = /^(ftp|http|https):\/\/[^ "]+$/;
+
   return (
     <Layout home>
       <Head>
@@ -20,6 +23,7 @@ export default function Index() {
           { siteTitle }
         </Typography>
         <TextField 
+          id="url"
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -27,13 +31,22 @@ export default function Index() {
               </InputAdornment>
             )
           }}
-          onBlur={() =>
-            console.log("Link posted!")
+          error={!validUrl.test(url)}
+          helperText={!validUrl.test(url) ? "URL is not correct" : ""}
+          onBlur={(event) => {
+            setUrl(event.target.value)
+            if (validUrl.test(event.target.value)) {
+                // CLEAR textfield
+                // SEND post request IF value IS VALID
+                // SHOW alert
+                console.log('Link Posted!')
+              }
+            }
           }
           variant="standard"
-          size="small" 
+          size="medium" 
+          type="url"
           label="URL" 
-          autoFocus
           fullWidth 
         />
       </Box>
