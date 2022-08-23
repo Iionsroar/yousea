@@ -6,44 +6,45 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Send from '@mui/icons-material/Send';
-import Layout, { siteTitle } from './components/layout';
-import Link from '../src/Link';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Layout, { siteTitle } from './components/layout';
+import Link from '../src/Link';
 
 export default function Index() {
   const validUrl = /^(ftp|http|https):\/\/[^ "]+$/;
   const [url, setUrl] = React.useState('http://url.com');
-  const [updates, setUpdates] = React.useState([]); 
+  const [urls, setUrls] = React.useState([]); 
   // TODO: SEND delete request ONCLICK of undo button
-  const updateItems = updates.map(update =>
+  const urlItems = urls.map(url =>
       <Alert 
-        key={update}
+        key={url}
         action={
           <Button color="inherit" size="small">
             UNDO
           </Button>
         }
       >
-        Added {update}
+        Added {url}
       </Alert>
   )
 
-  // TODO: SEND post request IF value IS VALID
   const handleEnter = (event) => {
     if (event.key == "Enter") {
       handleSubmit(event);
     }
   }
+  
+  // TODO: SEND post request IF value IS VALID
   const handleSubmit = (event) => {
     const val = event.target.value;
     setUrl(val);
     if (validUrl.test(val)) {
-      if (!updates.includes(val)) {
-        let tempUpdates = updates;
-        tempUpdates.push(val);
-        setUpdates(tempUpdates);
+      if (!urls.includes(val)) {
+        let tempUrls = urls;
+        tempUrls.push(val);
+        setUrls(tempUrls);
       }
       event.target.value = '';
     }
@@ -82,7 +83,7 @@ export default function Index() {
       </Box>
 
       <Stack sx={{ width: '100%' }} spacing={1}>
-          { updateItems }
+          { urlItems }
       </Stack>
 
       <Box align="center" sx={{ my: 4 }}>
