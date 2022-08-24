@@ -16,6 +16,7 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
+    "firebase": "^9.9.3",
     "next": "latest",
     "prop-types": "latest",
     "react": "latest",
@@ -23,7 +24,6 @@
   },
   "devDependencies": {
     "eslint": "latest",
-    "eslint-config-next": "latest",
-    "prisma": "^4.2.1"
+    "eslint-config-next": "latest"
   }
 }

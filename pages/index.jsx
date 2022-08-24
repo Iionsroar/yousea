@@ -10,7 +10,9 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Layout, { siteTitle } from './components/layout';
+import { child, ref, push, update } from 'firebase/database';
 import Link from '../src/Link';
+import db from '../src/initFirebaseClientSDK';
 
 export default function Index() {
   const validUrl = /^(ftp|http|https):\/\/[^ "]+$/;
@@ -36,6 +38,14 @@ export default function Index() {
     }
   }
   
+  const writeNewUrl = (url) => {
+    const newUrlKey = push(child(ref(db), 'urls')).key;
+    const updates = {};
+    updates['/urls/' + newUrlKey] = url;
+
+    return update(ref(db), updates);
+  }
+
   // TODO: SEND post request IF value IS VALID
   const handleSubmit = (event) => {
     const val = event.target.value;
@@ -45,6 +55,7 @@ export default function Index() {
         let tempUrls = urls;
         tempUrls.push(val);
         setUrls(tempUrls);
+        writeNewUrl(val);
       }
       event.target.value = '';
     }
