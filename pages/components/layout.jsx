@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import ProTip from '../../src/ProTip';
 import Link from '../../src/Link';
 import Copyright from '../../src/Copyright';
+import MenuAppBar from './appBar';
 
 export const siteTitle = 'Yousea';
 
@@ -24,6 +25,7 @@ export default function Layout({ children, home }) {
                 <meta name="og:title" content={siteTitle} />
 
             </Head>
+            <MenuAppBar />
             <main>{children}</main> 
             {!home && (
                 <div align="center">

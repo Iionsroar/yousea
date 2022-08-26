@@ -9,12 +9,25 @@ import Send from '@mui/icons-material/Send';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Layout, { siteTitle } from './components/layout';
 import { child, ref, push, update } from 'firebase/database';
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import Layout from './components/layout';
+import { auth } from "../src/initFirebaseClientSDK";
 import Link from '../src/Link';
-import db from '../src/initFirebaseClientSDK';
+import { db } from '../src/initFirebaseClientSDK';
 
 export default function Index() {
+  signInWithEmailAndPassword(auth, process.env.NEXT_PUBLIC_EMAIL, process.env.NEXT_PUBLIC_PASSWORD)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+  });
+
   const validUrl = /^(ftp|http|https):\/\/[^ "]+$/;
   const [url, setUrl] = React.useState('http://url.com');
   const [urls, setUrls] = React.useState([]); 
@@ -46,7 +59,6 @@ export default function Index() {
     return update(ref(db), updates);
   }
 
-  // TODO: SEND post request IF value IS VALID
   const handleSubmit = (event) => {
     const val = event.target.value;
     setUrl(val);
@@ -65,11 +77,10 @@ export default function Index() {
     <Layout home>
       <Head>
         <title>Home</title>
-      </Head>    
-
+      </Head>
       <Box align="center" sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          { siteTitle }
+          Home
         </Typography>
 
         <TextField 
