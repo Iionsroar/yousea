@@ -7,16 +7,31 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { siteTitle } from './layout';
 import LoginModal from './loginModal';
+import { auth } from "../../src/initFirebaseClientSDK";
 
 export default function MenuAppBar() {
-  const [auth, setAuth] = React.useState(false);
+  const [user, setUser] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
+  
+  React.useEffect(() => {
+    //Runs on the first render
+    //And any time any dependency value changes
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        setUser(user);
+        // ...
+      } else {
+        // User is signed out
+        setUser(null);
+      }
+    });
+  }, [user]);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,6 +39,15 @@ export default function MenuAppBar() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  
+  const handleSignout = () => {
+    signOut(auth).then(() => {
+      // Sign-out successful.
+      handleClose();
+    }).catch((error) => {
+      // An error happened.
+    });
   };
 
   return (
@@ -33,7 +57,7 @@ export default function MenuAppBar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             { siteTitle }
           </Typography>
-          {auth ? (
+          {Boolean(user) ? (
             <div>
               <IconButton
                 size="large"
@@ -61,7 +85,7 @@ export default function MenuAppBar() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Email here</MenuItem>
-                <MenuItem onClick={handleClose}>Log out</MenuItem>
+                <MenuItem onClick={handleSignout}>Log out</MenuItem>
               </Menu>
             </div>
           ): (

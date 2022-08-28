@@ -10,24 +10,11 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { child, ref, push, update } from 'firebase/database';
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import Layout from './components/layout';
-import { auth } from "../src/initFirebaseClientSDK";
 import Link from '../src/Link';
 import { db } from '../src/initFirebaseClientSDK';
 
 export default function Index() {
-  signInWithEmailAndPassword(auth, process.env.NEXT_PUBLIC_EMAIL, process.env.NEXT_PUBLIC_PASSWORD)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-  });
-
   const validUrl = /^(ftp|http|https):\/\/[^ "]+$/;
   const [url, setUrl] = React.useState('http://url.com');
   const [urls, setUrls] = React.useState([]); 

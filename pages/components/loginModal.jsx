@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../src/initFirebaseClientSDK";
 
 const style = {
   position: 'absolute',
@@ -22,8 +24,32 @@ const style = {
 
 export default function LoginModal() {
   const [open, setOpen] = React.useState(false);
+  const [signInFailed, setSignInFailed] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const handleSubmit = async (event) => {
+    // https://github.com/vercel/next.js/blob/canary/examples/next-forms/pages/js-form.js
+    // Stop the form from submitting and refreshing the page.
+    event.preventDefault()
+
+    // Get data from the form.
+    const data = {
+      email: event.target.email.value,
+      password: event.target.password.value,
+    }
+
+    signInWithEmailAndPassword(auth, data.email, data.password)
+    .then((userCredential) => {
+      // Signed in 
+      const user = userCredential.user;
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      setSignInFailed(true);
+    });
+  };
 
   return (
     <div>
@@ -40,6 +66,7 @@ export default function LoginModal() {
           </Typography>
           <Stack
             component="form"
+            onSubmit={handleSubmit}
             spacing={1}
             justifyContent="space-between"
             noValidate
@@ -51,20 +78,24 @@ export default function LoginModal() {
               type="email"
               variant="standard"
               size="medium" 
-              // onKeyPress={handleEnter}
+              error={ signInFailed }
+              onFocus={ () => setSignInFailed(false) }
               fullWidth
-            />
+              />
             <TextField 
               id="password"
               label="Password" 
               type="password"
               variant="standard"
               size="medium" 
-              // onKeyPress={handleEnter}
+              error={ signInFailed }
+              helperText={ signInFailed ? "Email or password is incorrect": "" }
+              onFocus={ () => setSignInFailed(false) }
               fullWidth
             />
+            <br />
+            <Button type="submit" variant="contained" fullWidth>Submit</Button>
           </Stack>
-          <Button sx={{ mt: 3 }} variant="contained" fullWidth>Submit</Button>
         </Box>
       </Modal>
     </div>
