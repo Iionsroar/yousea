@@ -1,4 +1,4 @@
-// from mui docs
+// derived from mui docs
 
 import * as React from 'react';
 import Box from '@mui/material/Box';
@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import LoadingButton from '@mui/lab/LoadingButton';
+import LoginIcon from '@mui/icons-material/Login';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../src/initFirebaseClientSDK";
 
@@ -25,12 +27,14 @@ const style = {
 export default function LoginModal() {
   const [open, setOpen] = React.useState(false);
   const [signInFailed, setSignInFailed] = React.useState(false);
+  const [isSigningIn, setIsSigningIn] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleSubmit = async (event) => {
+    setIsSigningIn(true);
     // https://github.com/vercel/next.js/blob/canary/examples/next-forms/pages/js-form.js
     // Stop the form from submitting and refreshing the page.
-    event.preventDefault()
+    event.preventDefault();
 
     // Get data from the form.
     const data = {
@@ -42,12 +46,13 @@ export default function LoginModal() {
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
-      // ...
+      setIsSigningIn(false);
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       setSignInFailed(true);
+      setIsSigningIn(false);
     });
   };
 
@@ -94,7 +99,15 @@ export default function LoginModal() {
               fullWidth
             />
             <br />
-            <Button type="submit" variant="contained" fullWidth>Submit</Button>
+            <LoadingButton 
+              type="submit" 
+              variant="contained" 
+              loadingPosition="start"
+              startIcon={<LoginIcon />}
+              loading={isSigningIn}
+              fullWidth>
+                Submit
+            </LoadingButton>
           </Stack>
         </Box>
       </Modal>

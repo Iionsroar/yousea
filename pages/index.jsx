@@ -9,7 +9,7 @@ import Send from '@mui/icons-material/Send';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { child, ref, push, update } from 'firebase/database';
+import { child, ref, set, push, update } from 'firebase/database';
 import Layout from './components/layout';
 import Link from '../src/Link';
 import { db } from '../src/initFirebaseClientSDK';
@@ -18,6 +18,10 @@ export default function Index() {
   const validUrl = /^(ftp|http|https):\/\/[^ "]+$/;
   const [url, setUrl] = React.useState('http://url.com');
   const [urls, setUrls] = React.useState([]); 
+  
+  const urlListRef = ref(db, 'urls');
+  const tagListRef = ref(db, 'tags');
+
   // TODO: SEND delete request ONCLICK of undo button
   const urlItems = urls.map(url =>
       <Alert 
@@ -39,11 +43,10 @@ export default function Index() {
   }
   
   const writeNewUrl = (url) => {
-    const newUrlKey = push(child(ref(db), 'urls')).key;
-    const updates = {};
-    updates['/urls/' + newUrlKey] = url;
-
-    return update(ref(db), updates);
+    const newUrlRef = push(urlListRef);
+    set(newUrlRef, {
+      "url": url,
+    });
   }
 
   const handleSubmit = (event) => {

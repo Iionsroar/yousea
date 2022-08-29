@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import MuiLink from '@mui/material/Link';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { siteTitle } from './layout';
 import LoginModal from './loginModal';
@@ -55,7 +56,9 @@ export default function MenuAppBar() {
       <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            { siteTitle }
+            <MuiLink target="_blank" underline="none" color="inherit" href="https://github.com/Iionsroar/yousea">
+              {siteTitle}
+            </MuiLink>
           </Typography>
           {Boolean(user) ? (
             <div>
@@ -84,7 +87,7 @@ export default function MenuAppBar() {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Email here</MenuItem>
+                <MenuItem onClick={handleClose}>{user.email}</MenuItem>
                 <MenuItem onClick={handleSignout}>Log out</MenuItem>
               </Menu>
             </div>
