@@ -58,7 +58,7 @@ export default function LoginModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen} color="inherit">Login</Button>
+      <Button tabIndex={-1} onClick={handleOpen} color="inherit">Login</Button>
       <Modal
         open={open}
         onClose={handleClose}

@@ -9,19 +9,49 @@ import Send from '@mui/icons-material/Send';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { child, ref, set, push, update } from 'firebase/database';
+import { get, ref, set, push, onValue } from 'firebase/database';
+import { onAuthStateChanged } from "firebase/auth";
 import Layout from './components/layout';
 import Link from '../src/Link';
-import { db } from '../src/initFirebaseClientSDK';
+import { db, auth } from '../src/initFirebaseClientSDK';
 
 export default function Index() {
   const validUrl = /^(ftp|http|https):\/\/[^ "]+$/;
+  const [user, setUser] = React.useState(null);
   const [url, setUrl] = React.useState('http://url.com');
   const [urls, setUrls] = React.useState([]); 
+  const [tagsInDb, setTagsInDb] = React.useState([]); 
+  const [urlsInDb, setUrlsInDb] = React.useState([]); 
   
   const urlListRef = ref(db, 'urls');
   const tagListRef = ref(db, 'tags');
-
+  
+  React.useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        onValue(tagListRef, (snapshot) => {
+          const data = Object.values(snapshot.val());
+          setTagsInDb(data.map(k => {
+            if (k['email'] == user.email) {
+              return k['tag'];
+            }
+          }));
+        });
+        onValue(urlListRef, (snapshot) => {
+          const data = Object.values(snapshot.val());
+          setUrlsInDb(data.map(k => {
+            if (k['email'] == user.email) {
+              return k['url'];
+            }
+          }));
+        });
+      } else {
+        setUser(null);
+      }
+    });
+  }, [user, url]);
+  
   // TODO: SEND delete request ONCLICK of undo button
   const urlItems = urls.map(url =>
       <Alert 
@@ -42,22 +72,37 @@ export default function Index() {
     }
   }
   
-  const writeNewUrl = (url) => {
-    const newUrlRef = push(urlListRef);
-    set(newUrlRef, {
-      "url": url,
-    });
+  const writeNewUrl = (url, tags) => {
+    if (!urlsInDb.includes(url)) {
+      const newUrlRef = push(urlListRef);
+      set(newUrlRef, {
+        "url": url,
+        "email": user.email,
+        "tags": tags
+      });
+    }
+
+    for (const tag of tags) {
+      if (!tagsInDb.includes(tag)) {
+        const newTagRef = push(tagListRef);
+        set(newTagRef, {
+          "tag": tag,
+          "email": user.email
+        });
+      };
+    }
   }
 
   const handleSubmit = (event) => {
-    const val = event.target.value;
-    setUrl(val);
-    if (validUrl.test(val)) {
-      if (!urls.includes(val)) {
-        let tempUrls = urls;
-        tempUrls.push(val);
-        setUrls(tempUrls);
-        writeNewUrl(val);
+    const val = event.target.value.split(" ");
+    const inputUrl = val[0];
+    const inputTags = val.slice(1);
+
+    setUrl(inputUrl);
+    if (validUrl.test(inputUrl)) {
+      if (!urls.includes(inputUrl)) {
+        setUrls(urls.concat(inputUrl));
+        writeNewUrl(inputUrl, inputTags);
       }
       event.target.value = '';
     }
@@ -89,7 +134,8 @@ export default function Index() {
           variant="standard"
           size="medium" 
           type="url"
-          label="URL" 
+          label="URL + Tags (Space separated)"
+          placeholder='http://github.com tag-1 next-js tag-3' 
           fullWidth 
         />
       </Box>
