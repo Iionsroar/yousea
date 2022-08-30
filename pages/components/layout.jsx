@@ -10,7 +10,7 @@ export const siteTitle = 'Yousea';
 
 export default function Layout({ children, home }) {
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
             <Head>
                 <meta
                     name="description"

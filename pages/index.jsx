@@ -50,6 +50,8 @@ export default function Index() {
   }
 
   const handleSubmit = (event) => {
+    event.preventDefault();
+
     const val = event.target.value;
     setUrl(val);
     if (validUrl.test(val)) {
@@ -68,29 +70,43 @@ export default function Index() {
       <Head>
         <title>Home</title>
       </Head>
-      <Box align="center" sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Home
-        </Typography>
+      <Typography align="center" variant="h4" component="h1" gutterBottom>
+        Home
+      </Typography>
+      <Box 
+        component="form"
+        align="center" 
+        sx={{ 
+          my: 4,
+          '& .MuiTextField-root': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete="off"
+      >
 
         <TextField 
           id="url"
+          label="URL" 
+          type="url"
+          onKeyPress={handleEnter}
+          error={ !validUrl.test(url) && Boolean(url)}
+          helperText={!validUrl.test(url) && Boolean(url) ? "URL is not correct" : ""}
+          variant="standard"
+          size="medium" 
+          />
+        <TextField 
+          id="tags"
+          label="Tags" 
+          onKeyPress={handleEnter}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton><Send /></IconButton>
+                <IconButton onClick={handleSubmit}><Send /></IconButton>
               </InputAdornment>
             )
           }}
-          error={ !validUrl.test(url) && Boolean(url)}
-          helperText={!validUrl.test(url) && Boolean(url) ? "URL is not correct" : ""}
-          onBlur={handleSubmit}
-          onKeyPress={handleEnter}
           variant="standard"
-          size="medium" 
-          type="url"
-          label="URL" 
-          fullWidth 
+          size="medium"
         />
       </Box>
 

@@ -56,7 +56,7 @@ export default function MenuAppBar() {
       <AppBar position="static" color="transparent" elevation={0}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <MuiLink target="_blank" underline="none" color="inherit" href="https://github.com/Iionsroar/yousea">
+            <MuiLink tabIndex="-1" target="_blank" underline="none" color="inherit" href="https://github.com/Iionsroar/yousea">
               {siteTitle}
             </MuiLink>
           </Typography>
