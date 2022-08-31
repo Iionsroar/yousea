@@ -9,7 +9,7 @@ import Send from '@mui/icons-material/Send';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { get, ref, set, push, onValue } from 'firebase/database';
+import { ref, set, push, onValue } from 'firebase/database';
 import { onAuthStateChanged } from "firebase/auth";
 import Layout from './components/layout';
 import Link from '../src/Link';

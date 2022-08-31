@@ -63,6 +63,7 @@ export default function MenuAppBar() {
           {Boolean(user) ? (
             <div>
               <IconButton
+                tabIndex={-1}
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
